@@ -1,0 +1,2 @@
+Polynomiale Regression: http://arachnoid.com/sage/polynomial.html
+Polynomiale Regression, Programm visualisiert: http://arachnoid.com/polysolve/#The_Program
