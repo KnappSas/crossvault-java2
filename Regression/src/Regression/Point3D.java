@@ -13,6 +13,18 @@ public class Point3D
         this.z = z;
     }
 
+    public void setX(Double x) {
+        this.x = x;
+    }
+
+    public void setY(Double y) {
+        this.y = y;
+    }
+
+    public void setZ(Double z) {
+        this.z = z;
+    }
+
     public Double getX()
     {
         return x;

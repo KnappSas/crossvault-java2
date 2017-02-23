@@ -22,12 +22,12 @@ public class Plot {
 			funcX = funcX2;
 			funcY = funcY2;
 			genauigkeit = genauigkeit2;
-			 
+
 	         // define your data
-	         double[] x = increment(-5.0, 1.0, 6.0); // x = 0.0:0.1:1.0
-	         double[] y = increment(-5.0, 1.0, 6.0);// y = 0.0:0.05:1.0
-	         
-	         double[][] zx = fx(x);
+		 	double[] x = increment(0, 1.0, funcX.size()); // x = 0.0:0.1:1.0
+		 	double[] y = increment(0, 1.0, funcY.size());// y = 0.0:0.05:1.0
+
+	         double[][] zx = fx(y);
 	         double[][] zy = fy(x);
 
 	         // create your PlotPanel (you can use it as a JPanel) with a legend at SOUTH
@@ -70,30 +70,26 @@ public class Plot {
 		 
 		 return z;
 	 }
-	 
-	 public static double[][] fx(double[] y) {
-		double[][] z = new double[funcX.size()][y.length];
-		for(int i = 0; i < funcX.size(); i++)
-		{
-			
-			for(int j = 0; j < y.length; j++)
-			{
+
+	public static double[][] fx(double[] y) {
+		double[][] z = new double[funcX.size()][funcX.size()];
+		for (int i = 0; i < funcX.size(); i++) {
+
+			for (int j = 0; j < funcX.size(); j++) {
 				z[i][j] = funcX.get(i).function(y[j]);
 			}
 		}
 		return z;
-	 }
-	 
-	 public static double[][] fy(double[] x) {
-			double[][] z = new double[x.length][funcY.size()];
-			for(int i = 0; i < funcY.size(); i++)
-			{
-				for(int j = 0; j < x.length; j++)
-				{
-					z[j][i] = funcY.get(i).function(x[j]);
-				}
+	}
+
+	public static double[][] fy(double[] x) {
+		double[][] z = new double[funcY.size()][funcY.size()];
+		for (int i = 0; i < funcY.size(); i++) {
+			for (int j = 0; j < funcY.size(); j++) {
+				z[j][i] = funcY.get(i).function(x[j]);
 			}
-			return z;
+		}
+		return z;
 	}
 	 
 	public static double[] increment(double start, double step, double end) {

@@ -24,9 +24,9 @@ public class TestGUI extends javax.swing.JFrame {
 	private ArrayList<Polynome> funcY;
 	private double genauigkeit = 0.01; // user input
 	private Plot3DPanel plot = new Plot3DPanel("NORTH");
-	private File fileIn = new File("C:\\Users\\user\\Desktop\\input.txt"); // user
+	private File fileIn = new File("test\\crossvault_points.txt"); // user
 																			// input
-	private File fileOut = new File("C:\\Users\\user\\Desktop\\output.txt"); // user
+	private File fileOut = new File("C:\\Users\\Sascha\\Desktop\\output.txt"); // user
 																				// input
 
 	public TestGUI() {
@@ -75,10 +75,10 @@ public class TestGUI extends javax.swing.JFrame {
 		funcY = funcY2;
 		genauigkeit = genauigkeit2;
 		//TODO Bereich berechnen lassen
-		double[] x = increment(-5.0, 1.0, 6.0); // x = 0.0:0.1:1.0
-		double[] y = increment(-5.0, 1.0, 6.0);// y = 0.0:0.05:1.0
+		double[] x = increment(0, 1.0, funcX.size()); // x = 0.0:0.1:1.0
+		double[] y = increment(0, 1.0, funcY.size());// y = 0.0:0.05:1.0
 
-		double[][] zx = fx(x);
+		double[][] zx = fx(y);
 		double[][] zy = fy(x);
 
 		// create your PlotPanel (you can use it as a JPanel) with a legend at
@@ -116,10 +116,10 @@ public class TestGUI extends javax.swing.JFrame {
 	}
 
 	public double[][] fx(double[] y) {
-		double[][] z = new double[funcX.size()][y.length];
+		double[][] z = new double[funcX.size()][funcX.size()];
 		for (int i = 0; i < funcX.size(); i++) {
 
-			for (int j = 0; j < y.length; j++) {
+			for (int j = 0; j < funcX.size(); j++) {
 				z[i][j] = funcX.get(i).function(y[j]);
 			}
 		}
@@ -127,9 +127,9 @@ public class TestGUI extends javax.swing.JFrame {
 	}
 
 	public double[][] fy(double[] x) {
-		double[][] z = new double[x.length][funcY.size()];
+		double[][] z = new double[funcY.size()][funcY.size()];
 		for (int i = 0; i < funcY.size(); i++) {
-			for (int j = 0; j < x.length; j++) {
+			for (int j = 0; j < funcY.size(); j++) {
 				z[j][i] = funcY.get(i).function(x[j]);
 			}
 		}
@@ -208,7 +208,7 @@ System.out.println("Init");
 		// TODO
 		jLabel3.setText("FI");
 
-		jLabel4.setText("Flächeninhalt");
+		jLabel4.setText("Flï¿½cheninhalt");
 
 		jButton2.setText("Neu Berechnen");
 		jButton2.addActionListener(new java.awt.event.ActionListener() {
