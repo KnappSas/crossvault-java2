@@ -4,6 +4,32 @@
 \title{Dokumentation - Projekt Kreuzgew\"olbe}
 \author{Java-Gruppe 2 (Dieter Dirk J\"uptner, Sascha Knapp, Kai Liu, Paul S\"oldner)}
 
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{\baselineskip}
+
+\usepackage{listings}
+\usepackage{color}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+	language=Java,
+	aboveskip=3mm,
+	belowskip=3mm,
+	showstringspaces=false,
+	columns=flexible,
+	basicstyle={\small\ttfamily},
+	numbers=none,
+	numberstyle=\tiny\color{gray},
+	keywordstyle=\color{blue},
+	commentstyle=\color{dkgreen},
+	stringstyle=\color{mauve},
+	breaklines=true,
+	breakatwhitespace=true,
+	tabsize=3
+}
+
 \begin{document}
 	\begin{titlepage}
 		\begin{center}
@@ -37,7 +63,36 @@
 \newpage
 \section{Testdaten - Erzeugung}
 
+Um Testdaten zu erzeugen haben wir uns eine konkrete Funktion gesucht. Diese wird in der Klasse \glqq{GenerateTest}\grqq benutzt.
+
+\begin{lstlisting}[caption={Funktion zur Testdaten-Erzeugung}, label={lst:label}, language=Java]
+public static double f1(double x, double y) {
+	double z = 100 - x*x - y*y;
+	return z;
+}
+\end{lstlisting}
+
+Die Funktion wird in einem Bereich x und y betrachtet. Diese Bereiche werden jeweils in flachen Feldern gespeichert. Die z-Werte der Funktion an den jeweiligen x und y werden in einem 2-Dimensionalen Feld gespeichert.
+Die gef\"ullten Felder werden an die \glqq{Output}\grqq - Klasse gegeben, die Punkte getrennt von Abs\"atzen in ein Textdokument schreibt.
+
 \section{Approximation - Regressionspolynome}
+Die Klasse \glqq{PolynomialPool}\grqq stellt Methoden zum Berechnen der ersten Polynome anhand der gemessenen Punkte zur Verf\"ugung. Dabei werden alle in einer Reihe liegenden Punkte in eine ArrayList gegeben und an die von mir geschriebene Klasse \glqq{Regression}\grqq-Klasse gegeben. Hier wird auch angegeben, welchen Grad die Polynome haben sollen. Wir haben eine Konstante mit dem Wert von 2 Grad gew\"ahlt.
+
+\begin{lstlisting}[caption={Polynome mit x als Raumkoordinate}, label={lst:label}, language=Java]
+private void approximateXPolynomials(PointMatrix points) //wenn noch keine Stützpunkte vorhanden sind
+{
+	for(int i = 0; i < points.stepsInXDirection(); i++)
+	{
+		Regression r = new Regression();
+		ArrayList<Point2D> p = extractPointsInLine_XDirectrion(points, i);
+		Polynomial polynomial = r.approximate(p, kDegree);
+		polynomial.setRoomCoordinate(data.pm.getPoint(i, 0).getX());
+		data.xPolynomials.add(polynomial);
+	}
+}
+\end{lstlisting}
+
+
 \subsection{Schnittstellen}
 
 \section{Berechnung der Oberfl\"ache}

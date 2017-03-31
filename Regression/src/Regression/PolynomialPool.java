@@ -5,14 +5,14 @@ import java.util.Collections;
 /**
  * Created by killer on 1/25/17.
  */
-public class PolynomePool implements IApproximation
+public class PolynomialPool implements IApproximation
 {
     private static final double kDelta = 0.1;
     private static final int kDegree = 2;
 
     AppData data = null;
 
-    public PolynomePool(AppData data)
+    public PolynomialPool(AppData data)
     {
         this.data = data;
         data.xPolynomials = new ArrayList<Polynomial>();
@@ -43,7 +43,7 @@ public class PolynomePool implements IApproximation
         return tmpPoints;
     }
 
-    private void approximateYPolynomes(PointMatrix points) //wenn noch keine Stützpunkte vorhanden sind
+    private void approximateYPolynomials(PointMatrix points) //wenn noch keine Stützpunkte vorhanden sind
     {
         for(int j = 0; j < points.stepsInYDirection(); j++)
         {
@@ -55,7 +55,7 @@ public class PolynomePool implements IApproximation
         }
     }
 
-    private void approximateXPolynomes(PointMatrix points) //wenn noch keine Stützpunkte vorhanden sind
+    private void approximateXPolynomials(PointMatrix points) //wenn noch keine Stützpunkte vorhanden sind
     {
         for(int i = 0; i < points.stepsInXDirection(); i++)
         {
@@ -70,8 +70,8 @@ public class PolynomePool implements IApproximation
     public void approximate(PointMatrix p)
     {
         data.pm = p;
-        approximateYPolynomes(p);
-        approximateXPolynomes(p);
+        approximateYPolynomials(p);
+        approximateXPolynomials(p);
         //approximateMoreX();
         //approximateMoreY();
     }

@@ -125,7 +125,7 @@ public class Controller
 
         try
         {
-            src = Input.unOrderedReadFromFile("/Users/SKnapp/Downloads/Kreuzgewîlbe/Kreuzgewîlbe/Regression/test/crossvault_points_original.txt");
+            src = Input.unOrderedReadFromFile("/Users/SKnapp/Documents/Java-Programming/crossvault-java2/Regression/test/crossvault_points_original.txt");
         }
         catch (IOException e)
         {
@@ -139,7 +139,7 @@ public class Controller
         data.points = points;
         data.biggestY = ListHelper.findBiggestY(data.points);
         data.biggestX = ListHelper.findBiggestX(data.points);
-        PolynomePool pool = new PolynomePool(data);
+        PolynomialPool pool = new PolynomialPool(data);
         pool.approximate(points);
         Integral i = new Integral();
         Double fläche = i.calcSurfaceArea(data.xPolynomials, data.yPolynomials);
