@@ -9,9 +9,7 @@ import IO.Output;
 import static java.lang.Math.*;
 
 import java.io.IOException;
- 
-//import static org.math.array.DoubleArray.*;
- 
+
 public class GridPlotsExample {
         public static void main(String[] args) throws IOException {
  
@@ -22,7 +20,7 @@ public class GridPlotsExample {
                 double[][] z1 = f1(x, y);
                 double[][] z2 = f2(x, y);
  
-                Output.writeInputFile("C:\\Users\\user\\Desktop\\input.txt", x, y, z1);
+                Output.writeInputFile("/Users/SKnapp/input.txt", x, y, z1);
                 
                 
                 // create your PlotPanel (you can use it as a JPanel) with a legend at SOUTH
@@ -54,7 +52,6 @@ public class GridPlotsExample {
                 for (int i = 0; i < x.length; i++)
                         for (int j = 0; j < y.length; j++)
                         {
-//                        	System.out.println(x[i] + " " + y[j]);
                                 z[j][i] = f1(x[i], y[j]);
                         }
                 return z;

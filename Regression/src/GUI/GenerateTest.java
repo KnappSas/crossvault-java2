@@ -1,29 +1,23 @@
 package GUI;
 
-import javax.swing.*;
- 
-import org.math.plot.*;
-
 import IO.Output;
 
 import static java.lang.Math.*;
 
 import java.io.IOException;
  
-//import static org.math.array.DoubleArray.*;
- 
+
 public class GenerateTest {
         public static void main(String[] args) throws IOException {
  
                 // define your data
-                double[] x = increment(-5.0, 1.0, 6.0); // x = 0.0:0.1:1.0
-                double[] y = increment(-5.0, 1.0, 6.0);// y = 0.0:0.05:1.0
+                double[] x = increment(-5.0, 0.5, 6.0); // x = 0.0:0.1:1.0
+                double[] y = increment(-5.0, 0.5, 6.0);// y = 0.0:0.05:1.0
           
                 double[][] z1 = f1(x, y);
                
  
-                Output.writeInputFile("C:\\Users\\user\\Desktop\\input.txt", x, y, z1);
-                
+                Output.writeInputFile("C:\\Users\\Sascha\\Downloads\\Kreuzgewölbe\\Kreuzgewölbe\\Regression\\test\\input__comma.txt", x, y, z1);
                 
 //                // create your PlotPanel (you can use it as a JPanel) with a legend at SOUTH
 //                Plot3DPanel plot = new Plot3DPanel("SOUTH");
@@ -40,8 +34,6 @@ public class GenerateTest {
 //                frame.setContentPane(plot);
 //               
 //                frame.setVisible(true);
-                
- 
         }
  
         // function definition: z=cos(PI*x)*sin(PI*y)

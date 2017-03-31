@@ -2,31 +2,21 @@ package GUI;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-
+import Regression.*;
 import org.math.plot.Plot3DPanel;
-
-import IO.Input;
-import Regression.Controller;
-import Regression.Point3D;
-import Regression.Polynome;
-import Regression.PolynomePool;
 
 public class TestGUI extends javax.swing.JFrame {
 
-	private ArrayList<Polynome> funcX;
-	private ArrayList<Polynome> funcY;
+	private ArrayList<Polynomial> funcX;
+	private ArrayList<Polynomial> funcY;
 	private double genauigkeit = 0.01; // user input
 	private Plot3DPanel plot = new Plot3DPanel("NORTH");
-	private File fileIn = new File("test\\crossvault_points.txt"); // user
+	private File fileIn = new File("test/crossvault_points.txt"); // user
 																			// input
-	private File fileOut = new File("C:\\Users\\Sascha\\Desktop\\output.txt"); // user
+	private File fileOut = new File("C:/Users/Sascha/Desktop/output.txt"); // user
 																				// input
 
 	public TestGUI() {
@@ -69,22 +59,22 @@ public class TestGUI extends javax.swing.JFrame {
 		});
 	}
 	
-	public void update(ArrayList<Polynome> funcX2, ArrayList<Polynome> funcY2, double genauigkeit2) {
+	public void update(ArrayList<Polynomial> funcX2, ArrayList<Polynomial> funcY2, double genauigkeit2, AppData _data) {
 		System.out.println("update");
 		funcX = funcX2;
 		funcY = funcY2;
 		genauigkeit = genauigkeit2;
-		//TODO Bereich berechnen lassen
-		double[] x = increment(0, 1.0, funcX.size()); // x = 0.0:0.1:1.0
-		double[] y = increment(0, 1.0, funcY.size());// y = 0.0:0.05:1.0
+
+		//je nach eingestelltem delta bei der Polynom-Erstellung muss der step hier anders gewählt werden.
+		double step = 1.0;
+		double[] x = increment(0, step, _data.biggestX+1);
+		double[] y = increment(0, step, _data.biggestY+1);
 
 		double[][] zx = fx(y);
 		double[][] zy = fy(x);
 
 		// create your PlotPanel (you can use it as a JPanel) with a legend at
 		// SOUTH
-
-		
 		// add grid plot to the PlotPanel
 		plot.removeAllPlots();
 		plot.addGridPlot("Funktionen nach x", x, y, zx);
@@ -116,21 +106,20 @@ public class TestGUI extends javax.swing.JFrame {
 	}
 
 	public double[][] fx(double[] y) {
-		double[][] z = new double[funcX.size()][funcX.size()];
+		double[][] z = new double[y.length][funcX.size()];
 		for (int i = 0; i < funcX.size(); i++) {
-
-			for (int j = 0; j < funcX.size(); j++) {
-				z[i][j] = funcX.get(i).function(y[j]);
+			for (int j = 0; j < y.length; j++) {
+				z[j][i] = funcX.get(i).function(y[j]);
 			}
 		}
 		return z;
 	}
 
 	public double[][] fy(double[] x) {
-		double[][] z = new double[funcY.size()][funcY.size()];
+		double[][] z = new double[funcY.size()][x.length];
 		for (int i = 0; i < funcY.size(); i++) {
-			for (int j = 0; j < funcY.size(); j++) {
-				z[j][i] = funcY.get(i).function(x[j]);
+			for (int j = 0; j < x.length; j++) {
+				z[i][j] = funcY.get(i).function(x[j]);
 			}
 		}
 		return z;
@@ -219,9 +208,9 @@ System.out.println("Init");
 
 		jLabel5.setText("Output:");
 
-		jLabel7.setText("Polynome in x-Richtung");
+		jLabel7.setText("Polynomial in x-Richtung");
 
-		jLabel8.setText("Polynome in y-Richtung");
+		jLabel8.setText("Polynomial in y-Richtung");
 
 		// TODO add polynom-equations
 		jTextArea1.setColumns(20);

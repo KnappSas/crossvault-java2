@@ -1,31 +1,28 @@
 package GUI;
 
 import java.util.ArrayList;
-import java.util.function.Function;
-
 import javax.swing.JFrame;
 
+import Regression.Polynomial;
 import org.math.plot.Plot3DPanel;
-
-import Regression.Polynome;
 
 public class Plot {
 
-	 private static ArrayList<Polynome> funcX;
-	 private static ArrayList<Polynome> funcY;
+	 private static ArrayList<Polynomial> funcX;
+	 private static ArrayList<Polynomial> funcY;
 	 private static double genauigkeit = 0.01; // user input
 	 private static double[] fx_x;
 	 private static double[] fy_y;
 	 
-	 public static void gui(ArrayList<Polynome> funcX2, ArrayList<Polynome> funcY2, double genauigkeit2) {
+	 public static void gui(ArrayList<Polynomial> funcX2, ArrayList<Polynomial> funcY2, double genauigkeit2) {
 		 
 			funcX = funcX2;
 			funcY = funcY2;
 			genauigkeit = genauigkeit2;
 
 	         // define your data
-		 	double[] x = increment(0, 1.0, funcX.size()); // x = 0.0:0.1:1.0
-		 	double[] y = increment(0, 1.0, funcY.size());// y = 0.0:0.05:1.0
+		 	double[] x = increment(0, 1.0, 10); // x = 0.0:0.1:1.0
+		 	double[] y = increment(0, 1.0, 10);// y = 0.0:0.05:1.0
 
 	         double[][] zx = fx(y);
 	         double[][] zy = fy(x);
@@ -74,7 +71,6 @@ public class Plot {
 	public static double[][] fx(double[] y) {
 		double[][] z = new double[funcX.size()][funcX.size()];
 		for (int i = 0; i < funcX.size(); i++) {
-
 			for (int j = 0; j < funcX.size(); j++) {
 				z[i][j] = funcX.get(i).function(y[j]);
 			}

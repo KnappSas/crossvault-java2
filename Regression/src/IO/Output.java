@@ -3,11 +3,11 @@ package IO;
 import java.io.*;
 import java.util.ArrayList;
 
-import Regression.Polynome;
+import Regression.Polynomial;
 
 public class Output {
 
-	public static void writeToFile(String file, double genauigkeit, ArrayList<Polynome> funcX, ArrayList<Polynome> funcY) throws IOException
+	public static void writeToFile(String file, double genauigkeit, ArrayList<Polynomial> funcX, ArrayList<Polynomial> funcY) throws IOException
 	{
 		FileWriter fw = new FileWriter(file);
 		BufferedWriter bw = new BufferedWriter(fw);
