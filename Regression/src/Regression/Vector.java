@@ -66,6 +66,17 @@ public class Vector
     }
 
 
+    public Double sum()
+    {
+        Double sum = 0.0;
+        for(Double xValue : x)
+        {
+            sum += xValue*xValue;
+        }
+
+        return Math.sqrt(sum);
+    }
+
     public double get(int i)
     {
         return x[i];

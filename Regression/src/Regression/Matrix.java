@@ -310,13 +310,9 @@ class Matrix
         detZW = new Vector(size);
         double result_a = a.determinante();
         this.detZWA = result_a;
-        System.out.println("Determinate von A:" + result_a);
-
         for (int i = 0; i < size; i++)
         {
             Matrix mat_i = a.matrixMitB(a, b, i);
-            System.out.println("i-te Matrix: " + i);
-            mat_i.print();
 
             double det_b = mat_i.determinante();
             result.set(i, det_b / result_a);

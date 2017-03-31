@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class Regression
 {
 
-    public Polynome approximate(ArrayList<Point2D> points, int degree)
+    public Polynomial approximate(ArrayList<Point2D> points, int degree)
     {
         if(points.size() <= 1)
         {
@@ -40,9 +40,9 @@ public class Regression
         return createPolynome(result, degree);
     }
 
-    private Polynome createPolynome(Vector result, int degree)
+    private Polynomial createPolynome(Vector result, int degree)
     {
-        Polynome p = new Polynome(degree);
+        Polynomial p = new Polynomial(degree);
         for(int i = 0; i < degree+1; i++)
         {
             p.setCoefficient(i, result.get(i));

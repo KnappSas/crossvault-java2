@@ -1,5 +1,6 @@
 package Regression;
-import org.testng.annotations.Test;
+
+import org.junit.Test;
 
 import java.util.ArrayList;
 
@@ -21,7 +22,7 @@ public class RegressionTest
         }
 
         Regression r = new Regression();
-        Polynome p = r.approximate(points, 4);
+        Polynomial p = r.approximate(points, 4);
 
         Double f30 = p.function(3.0);
 

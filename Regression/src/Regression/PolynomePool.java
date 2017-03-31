@@ -1,5 +1,4 @@
 package Regression;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -8,85 +7,188 @@ import java.util.Collections;
  */
 public class PolynomePool implements IApproximation
 {
-    private static final int kMinPointCount = 2;
-    private ArrayList<Polynome> xPolynomes;
-    private ArrayList<Polynome> yPolynomes;
-    private ArrayList<ArrayList<Point3D>> points;
+    private static final double kDelta = 0.1;
+    private static final int kDegree = 2;
 
-    public PolynomePool()
+    AppData data = null;
+
+    public PolynomePool(AppData data)
     {
-        xPolynomes = new ArrayList<Polynome>();
-        yPolynomes = new ArrayList<Polynome>();
+        this.data = data;
+        data.xPolynomials = new ArrayList<Polynomial>();
+        data.yPolynomials = new ArrayList<Polynomial>();
     }
 
-    private ArrayList<Point2D> extractPointsInLineXDirectrion(ArrayList<Point3D> fx)
+    private ArrayList<Point2D> extractPointsInLine_XDirectrion(PointMatrix pm, int x)
     {
-        ArrayList<Point2D> tmpPoints = new ArrayList<Point2D>();
-        for(Point3D p : fx)
+        ArrayList<Point2D> tmpPoints = new ArrayList<>();
+        for(int i = 0; i < pm.stepsInYDirection(); i++)
         {
+            Point3D p = pm.getPoint(x, i);
             tmpPoints.add(new Point2D(p.getY(), p.getZ()));
         }
 
         return tmpPoints;
     }
 
-    private ArrayList<Point2D> extractPointsInLineYDirectrion(int j)
+    private ArrayList<Point2D> extractPointsInLine_YDirectrion(int k)
     {
-        ArrayList<Point2D> tmpPoints = new ArrayList<Point2D>();
-        for(int i = 0; i < points.size(); i++)
+        ArrayList<Point2D> tmpPoints = new ArrayList<>();
+        for(int i = 0; i < data.pm.stepsInXDirection(); i++)
         {
-            if(j >= points.get(i).size())
-                continue;
-            Point3D currPoint = points.get(i).get(j);
+            Point3D currPoint = data.points.get(i).get(k);
             tmpPoints.add(new Point2D(currPoint.getX(), currPoint.getZ()));
         }
 
         return tmpPoints;
     }
 
-
-    private int findBiggestList(ArrayList<ArrayList<Point3D>> points)
+    private void approximateYPolynomes(PointMatrix points) //wenn noch keine Stützpunkte vorhanden sind
     {
-        int size = 0;
-        for(ArrayList<Point3D> list : points)
+        for(int j = 0; j < points.stepsInYDirection(); j++)
         {
-            if(list.size() > size)
-                size = list.size();
+            Regression r = new Regression();
+            ArrayList<Point2D> p = extractPointsInLine_YDirectrion(j);
+            Polynomial polynomial = r.approximate(p, kDegree);
+            polynomial.setRoomCoordinate(data.pm.getPoint(0, j).getY());
+            data.yPolynomials.add(polynomial);
+        }
+    }
+
+    private void approximateXPolynomes(PointMatrix points) //wenn noch keine Stützpunkte vorhanden sind
+    {
+        for(int i = 0; i < points.stepsInXDirection(); i++)
+        {
+            Regression r = new Regression();
+            ArrayList<Point2D> p = extractPointsInLine_XDirectrion(points, i);
+            Polynomial polynomial = r.approximate(p, kDegree);
+            polynomial.setRoomCoordinate(data.pm.getPoint(i, 0).getX());
+            data.xPolynomials.add(polynomial);
+        }
+    }
+
+    public void approximate(PointMatrix p)
+    {
+        data.pm = p;
+        approximateYPolynomes(p);
+        approximateXPolynomes(p);
+        //approximateMoreX();
+        //approximateMoreY();
+    }
+
+    public Polynomial approxiamtePolynomialInX(Double x)
+    {
+        ArrayList<Point2D> pointsToInterpolate = new ArrayList<>();
+        for(int k = 0; k < data.yPolynomials.size(); k++) //alle stützpunkte durchgehen
+        {
+            Polynomial polynomial = data.yPolynomials.get(k);
+            Double y = polynomial.getRoomCoordinate();
+            Double z = data.yPolynomials.get(k).function(x);
+            Point2D currPoint = new Point2D(y,z);
+            pointsToInterpolate.add(currPoint);
         }
 
-        return size;
+        Regression regression = new Regression();
+        Polynomial polynomial = regression.approximate(pointsToInterpolate, 2);
+        polynomial.setRoomCoordinate(x);
+        data.xPolynomials.add(polynomial);
+        return polynomial;
+    }
+
+    public void approximateMoreX()
+    {
+        Double delta = kDelta;
+        int i = 0;
+        Double x = 0.0;
+        int xi = 0;
+        while(x < data.biggestX)
+        {
+            x = xi * delta;
+            if(Math.abs(x-data.pm.getPoint(i, 0).getX()) <= 0.0001)
+            {
+                xi++;
+                continue;
+            }
+
+            if(x >= data.pm.getPoint(i, 0).getX())
+                i++;
+
+            Polynomial p = approxiamtePolynomialInX(x);
+            int max = (int)(data.biggestY/delta);
+            for(int k = 0; k <= max; k++)
+            {
+                double y = k * delta;
+                data.pm.addPoint(x, y, p.function(y));
+            }
+            xi++;
+        }
+
+        Collections.sort(data.xPolynomials, (a, b)-> a.getRoomCoordinate() < b.getRoomCoordinate() ? -1 : a.getRoomCoordinate() == b.getRoomCoordinate() ? 0 : 1);
+    }
+
+    public Polynomial approximatePolynomialInY (Double y)
+    {
+        ArrayList<Point2D> pointsToInterpolate = new ArrayList<>();
+        for(int k = 0; k < data.xPolynomials.size(); k++) //alle stützpunkte durchgehen
+        {
+            Polynomial polynomial = data.xPolynomials.get(k);
+            Double x = polynomial.getRoomCoordinate();
+            Double z = data.xPolynomials.get(k).function(y);
+            Point2D currPoint = new Point2D(x,z);
+            pointsToInterpolate.add(currPoint);
+        }
+
+        Regression regression = new Regression();
+        Polynomial polynomial = regression.approximate(pointsToInterpolate, 2);
+        polynomial.setRoomCoordinate(y);
+        data.yPolynomials.add(polynomial);
+        return polynomial;
+    }
+
+    public void approximateMoreY() //TODO: UNITTESTS
+    {
+        Double delta = kDelta;
+        int i = 0;
+        Double y = 0.0;
+        int yi = 0;
+        while(y < data.biggestY)
+        {
+            y = yi * delta;
+            if(Math.abs(y-data.pm.getPoint(0, i).getY()) <= 0.0001)
+            {
+                yi++;
+                continue;
+            }
+            if(y >= data.pm.getPoint(0, i).getY())
+                i++;
+            Polynomial p = approximatePolynomialInY(y);
+            int max = (int)(data.biggestX/delta);
+            for(int xk = 0; xk <= max; xk++)
+            {
+                double x = xk*delta;
+                data.pm.addPoint(x, y, p.function(x));
+            }
+
+            yi++;
+        }
+
+        Collections.sort(data.yPolynomials, (a, b)-> a.getRoomCoordinate() < b.getRoomCoordinate() ? -1 : a.getRoomCoordinate() == b.getRoomCoordinate() ? 0 : 1);
+    }
+
+    public ArrayList<Polynomial> getXPolynomes()
+    {
+        return data.xPolynomials;
+    }
+
+    public ArrayList<Polynomial> getYPolynomes()
+    {
+        return data.yPolynomials;
     }
 
     @Override
-    public void approximate(ArrayList<ArrayList<Point3D>> points)
-    {
-        this.points = points;
-        for(int i = 0; i < points.size(); i++)
-        {
-            Regression r = new Regression();
-            ArrayList<Point2D> p = extractPointsInLineXDirectrion(points.get(i));
-            if(p.size() <= 2)
-                continue;
-            xPolynomes.add(r.approximate(p, 2));
-        }
-
-        for(int j = 0; j < findBiggestList(points); j++)
-        {
-            Regression r = new Regression();
-            ArrayList<Point2D> p = extractPointsInLineYDirectrion(j);
-            if(p.size() <= 2)
-                continue;
-            yPolynomes.add(r.approximate(p, kMinPointCount));
-        }
-    }
-
-    public ArrayList<Polynome> getXPolynomes()
-    {
-        return xPolynomes;
-    }
-
-    public ArrayList<Polynome> getYPolynomes()
-    {
-        return yPolynomes;
+    public void approximate(ArrayList<ArrayList<Point3D>> points) {
+        PointMatrix pointMatrix = new PointMatrix();
+        pointMatrix.setPointList(points);
+        approximate(pointMatrix);
     }
 }
