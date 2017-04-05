@@ -2,7 +2,7 @@ package Regression;
 
 import IO.Input;
 import GUI.TestGUI;
-import Oberfläche.Integral;
+import Oberflaeche.Integral;
 
 import java.io.File;
 import java.io.IOException;

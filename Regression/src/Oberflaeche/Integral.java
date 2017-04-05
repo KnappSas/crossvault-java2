@@ -1,4 +1,4 @@
-package Oberfläche;
+package Oberflaeche;
 
 import Regression.Point3D;
 import Regression.Polynomial;
