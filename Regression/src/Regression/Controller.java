@@ -111,21 +111,20 @@ public class Controller
 
     public static void main(String[] args) throws IOException
     {
-        long start = System.currentTimeMillis();
+      
         TestGUI test = new TestGUI();
         test.gui();
-        long end = System.currentTimeMillis();
-        long time = end - start;
-        System.out.println("Time spent for calculation: " + time);
+        
     }
     
     public static void update(File file, double genauigkeit, TestGUI testgui) {
         ArrayList<ArrayList<Point3D>> points;
         ArrayList<Point3D> src = null;
-
+        long start = System.currentTimeMillis();
+      
         try
         {
-            src = Input.unOrderedReadFromFile("/Users/SKnapp/Documents/Java-Programming/crossvault-java2/Regression/test/crossvault_points_original.txt");
+            src = Input.unOrderedReadFromFile(file.getAbsolutePath().replace("\\", "/"));
         }
         catch (IOException e)
         {
@@ -139,10 +138,15 @@ public class Controller
         data.points = points;
         data.biggestY = ListHelper.findBiggestY(data.points);
         data.biggestX = ListHelper.findBiggestX(data.points);
-        PolynomialPool pool = new PolynomialPool(data);
-        pool.approximate(points);
+        PolynomialPool pool = new PolynomialPool(data, genauigkeit);
+        PointMatrix pointMatrix = pool.approximate(points);
         Integral i = new Integral();
-        Double fläche = i.calcSurfaceArea(data.xPolynomials, data.yPolynomials);
-        testgui.update(pool.getXPolynomes(), pool.getYPolynomes(),genauigkeit, data);
+        Double flaeche = i.calcSurfaceArea(data.xPolynomials, data.yPolynomials);
+        testgui.update(pointMatrix ,genauigkeit, flaeche);
+        
+        long end = System.currentTimeMillis();
+        long time = end - start;
+//        System.out.println("Time spent for calculation: " + time);
+        
     }
 }
