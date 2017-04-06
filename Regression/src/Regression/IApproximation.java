@@ -7,5 +7,5 @@ import java.util.ArrayList;
  */
 public interface IApproximation
 {
-    void approximate(ArrayList<ArrayList<Point3D>> points);
+	PointMatrix approximate(ArrayList<ArrayList<Point3D>> points);
 }
