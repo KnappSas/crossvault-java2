@@ -7,8 +7,8 @@ import java.util.Collections;
  */
 public class PolynomialPool implements IApproximation
 {
-    private static final double kDelta = 0.1;
-    private static final int kDegree = 2;
+    private double kDelta = 10;
+    private int kDegree = 2;
 
     AppData data = null;
 
@@ -18,7 +18,15 @@ public class PolynomialPool implements IApproximation
         data.xPolynomials = new ArrayList<Polynomial>();
         data.yPolynomials = new ArrayList<Polynomial>();
     }
-
+    
+    public PolynomialPool(AppData data, double delta)
+    {
+    	this.kDelta = delta;
+        this.data = data;
+        data.xPolynomials = new ArrayList<Polynomial>();
+        data.yPolynomials = new ArrayList<Polynomial>();
+    }
+    
     private ArrayList<Point2D> extractPointsInLine_XDirectrion(PointMatrix pm, int x)
     {
         ArrayList<Point2D> tmpPoints = new ArrayList<>();
@@ -43,7 +51,7 @@ public class PolynomialPool implements IApproximation
         return tmpPoints;
     }
 
-    private void approximateYPolynomials(PointMatrix points) //wenn noch keine Stützpunkte vorhanden sind
+    private void approximateYPolynomials(PointMatrix points) //wenn noch keine StÃ¼tzpunkte vorhanden sind
     {
         for(int j = 0; j < points.stepsInYDirection(); j++)
         {
@@ -55,7 +63,7 @@ public class PolynomialPool implements IApproximation
         }
     }
 
-    private void approximateXPolynomials(PointMatrix points) //wenn noch keine Stützpunkte vorhanden sind
+    private void approximateXPolynomials(PointMatrix points) //wenn noch keine StÃ¼tzpunkte vorhanden sind
     {
         for(int i = 0; i < points.stepsInXDirection(); i++)
         {
@@ -72,14 +80,14 @@ public class PolynomialPool implements IApproximation
         data.pm = p;
         approximateYPolynomials(p);
         approximateXPolynomials(p);
-        //approximateMoreX();
-        //approximateMoreY();
+        approximateMoreX();
+        approximateMoreY();
     }
 
     public Polynomial approxiamtePolynomialInX(Double x)
     {
         ArrayList<Point2D> pointsToInterpolate = new ArrayList<>();
-        for(int k = 0; k < data.yPolynomials.size(); k++) //alle stützpunkte durchgehen
+        for(int k = 0; k < data.yPolynomials.size(); k++) //alle stÃ¼tzpunkte durchgehen
         {
             Polynomial polynomial = data.yPolynomials.get(k);
             Double y = polynomial.getRoomCoordinate();
@@ -129,7 +137,7 @@ public class PolynomialPool implements IApproximation
     public Polynomial approximatePolynomialInY (Double y)
     {
         ArrayList<Point2D> pointsToInterpolate = new ArrayList<>();
-        for(int k = 0; k < data.xPolynomials.size(); k++) //alle stützpunkte durchgehen
+        for(int k = 0; k < data.xPolynomials.size(); k++) //alle stÃ¼tzpunkte durchgehen
         {
             Polynomial polynomial = data.xPolynomials.get(k);
             Double x = polynomial.getRoomCoordinate();
@@ -186,9 +194,10 @@ public class PolynomialPool implements IApproximation
     }
 
     @Override
-    public void approximate(ArrayList<ArrayList<Point3D>> points) {
+    public PointMatrix approximate(ArrayList<ArrayList<Point3D>> points) {
         PointMatrix pointMatrix = new PointMatrix();
         pointMatrix.setPointList(points);
         approximate(pointMatrix);
+        return pointMatrix;
     }
 }
