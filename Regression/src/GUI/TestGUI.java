@@ -16,7 +16,7 @@ public class TestGUI extends javax.swing.JFrame {
 	private Plot3DPanel plot = new Plot3DPanel("NORTH");
 	private File fileIn = new File("Z:/EclipseWorkspace/Crossvault/crossvault-java2-master/Regression/test/input.txt");
 	private File fileOut = new File("Z:/EclipseWorkspace/Crossvault/crossvault-java2-master/Regression/test/output_crossvault_points_original.txt"); // user
-																				
+
 	public TestGUI() {
 		// create your PlotPanel (you can use it as a JPanel) with a legend at
 		// SOUTH
@@ -58,12 +58,12 @@ public class TestGUI extends javax.swing.JFrame {
 	public void update(PointMatrix pointMatrix, double genauigkeit2, double flaeche) {
 		genauigkeit = genauigkeit2;
 		jLabel3.setText(String.valueOf(flaeche));
-		
+
 		plot.removeAllPlots();
 		double[] x = new double[pointMatrix.stepsInXDirection()];
 		double[] y = new double[pointMatrix.stepsInYDirection()];
 		double[][] z = new double[y.length][x.length];
-		
+
 		for(int i = 0; i < y.length; i++){
 			y[i] = pointMatrix.getPoint(0, i).getY();
 			for(int j = 0; j < x.length; j++){
@@ -75,7 +75,7 @@ public class TestGUI extends javax.swing.JFrame {
 		plot.addGridPlot("Plot", x, y, z);
 //		plot.addGridPlot("Funktionen nach y", x, y, zy);
 	}
-	
+
 
 	// <editor-fold defaultstate="collapsed" desc="Generated Code">
 	private void initComponents() {

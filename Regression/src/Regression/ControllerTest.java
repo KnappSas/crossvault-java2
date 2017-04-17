@@ -27,13 +27,13 @@ public class ControllerTest {
 */
     @Test
     public void removeDistortion() throws Exception {
-        Point3D[] src = {new Point3D(-5d,-5d,5d), new Point3D(-4.5, -3d, 4d), new Point3D(-4.5, -3d, 3d)};
+        /*Point3D[] src = {new Point3D(0d,-5d,5d), new Point3D(0.5, -3d, 4d), new Point3D(0.5, -3d, 3d)};
         ArrayList<Point3D> points = new ArrayList<>();
         Collections.addAll(points, src);
 
         ArrayList<ArrayList<Point3D>> orderedPoints = Controller.orderPoints(points);
 
-        Controller.removeDistortionInX(orderedPoints);
+        Controller.removeAnomaly(orderedPoints);*/
     }
 
 }

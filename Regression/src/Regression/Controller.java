@@ -39,26 +39,34 @@ public class Controller
         return result;
     }
 
-    static void removeDistortionInX(ArrayList<ArrayList<Point3D>> points)
+    static void removeAnomaly(PointMatrix points)
     {
-        double distortion;
-        double prevXValue;
-        double currentXValue;
-        for(int i = 1; i < points.size(); i++)
+        double delta = 0.5;
+        ArrayList<Point3D> tmpPoints = new ArrayList<Point3D>();
+        int j = 1;
+        double sum = 0;
+        for(int i = 0; i < points.stepsInXDirection(); i++)
         {
-            prevXValue = points.get(i-1).get(0).getX();
-            currentXValue = points.get(i).get(0).getX();
-            distortion = Math.abs(currentXValue-prevXValue);
-            if(distortion > 0.5)
-                continue;
 
-            for(Point3D p : points.get(i-1))
+            Point3D currPoint = points.getPoint(i, 0);
+            tmpPoints.add(currPoint);
+            if(currPoint.getX() <= i*delta)
             {
-                p.setX(currentXValue);
-                points.get(i).add(p);
+                tmpPoints.add(currPoint);
+                sum += currPoint.getX();
+                j++;
             }
-
-            points.remove(i-1);
+            else
+            {
+                double mid = sum / j;
+                for(Point3D p : tmpPoints)
+                {
+                    p.setX(mid);
+                }
+                tmpPoints.clear();
+                j = 0;
+                sum = 0;
+            }
         }
     }
 /*
@@ -111,20 +119,20 @@ public class Controller
 
     public static void main(String[] args) throws IOException
     {
-      
+
         TestGUI test = new TestGUI();
         test.gui();
-        
+
     }
     
     public static void update(File file, double genauigkeit, TestGUI testgui) {
         ArrayList<ArrayList<Point3D>> points;
         ArrayList<Point3D> src = null;
         long start = System.currentTimeMillis();
-      
+
         try
         {
-            src = Input.unOrderedReadFromFile(file.getAbsolutePath().replace("\\", "/"));
+            src = Input.unOrderedReadFromFile("/home/killer/Documents/git-repos/crossvault-java2/Regression/test/crossvault_points.txt");
         }
         catch (IOException e)
         {
@@ -132,21 +140,27 @@ public class Controller
         }
 
         points = orderPoints(src);
-//        removeDistortionInX(points);
-//        removeDistortionInY(points);
+
         AppData data = new AppData();
         data.points = points;
         data.biggestY = ListHelper.findBiggestY(data.points);
         data.biggestX = ListHelper.findBiggestX(data.points);
-        PolynomialPool pool = new PolynomialPool(data, genauigkeit);
-        PointMatrix pointMatrix = pool.approximate(points);
+
+        PointMatrix pointMatrix = new PointMatrix();
+        pointMatrix.setPointList(points);
+        data.pm = pointMatrix;
+
+        removeAnomaly(data.pm);
+
+        PolynomialPool pool = new PolynomialPool(data);
+        pool.approximate(points);
         Integral i = new Integral();
         Double flaeche = i.calcSurfaceArea(data.xPolynomials, data.yPolynomials);
         testgui.update(pointMatrix ,genauigkeit, flaeche);
-        
+
         long end = System.currentTimeMillis();
         long time = end - start;
 //        System.out.println("Time spent for calculation: " + time);
-        
+
     }
 }

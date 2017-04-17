@@ -13,5 +13,4 @@ public class AppData
     ArrayList<Polynomial> yPolynomials;
     public Double biggestY = 0.0;
     public Double biggestX = 0.0;
-
 }

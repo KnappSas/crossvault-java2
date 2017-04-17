@@ -7,8 +7,8 @@ import java.util.Collections;
  */
 public class PolynomialPool implements IApproximation
 {
-    private double kDelta = 10;
-    private int kDegree = 2;
+    private static double kDelta = 0.1;
+    private static final int kDegree = 2;
 
     AppData data = null;
 
@@ -18,7 +18,7 @@ public class PolynomialPool implements IApproximation
         data.xPolynomials = new ArrayList<Polynomial>();
         data.yPolynomials = new ArrayList<Polynomial>();
     }
-    
+
     public PolynomialPool(AppData data, double delta)
     {
     	this.kDelta = delta;
@@ -26,7 +26,7 @@ public class PolynomialPool implements IApproximation
         data.xPolynomials = new ArrayList<Polynomial>();
         data.yPolynomials = new ArrayList<Polynomial>();
     }
-    
+
     private ArrayList<Point2D> extractPointsInLine_XDirectrion(PointMatrix pm, int x)
     {
         ArrayList<Point2D> tmpPoints = new ArrayList<>();
@@ -80,14 +80,14 @@ public class PolynomialPool implements IApproximation
         data.pm = p;
         approximateYPolynomials(p);
         approximateXPolynomials(p);
-        approximateMoreX();
-        approximateMoreY();
+        //approximateMoreX();
+        //approximateMoreY();
     }
 
     public Polynomial approxiamtePolynomialInX(Double x)
     {
         ArrayList<Point2D> pointsToInterpolate = new ArrayList<>();
-        for(int k = 0; k < data.yPolynomials.size(); k++) //alle stÃ¼tzpunkte durchgehen
+        for(int k = 0; k < data.yPolynomials.size(); k++) //alle stützpunkte durchgehen
         {
             Polynomial polynomial = data.yPolynomials.get(k);
             Double y = polynomial.getRoomCoordinate();
@@ -137,7 +137,7 @@ public class PolynomialPool implements IApproximation
     public Polynomial approximatePolynomialInY (Double y)
     {
         ArrayList<Point2D> pointsToInterpolate = new ArrayList<>();
-        for(int k = 0; k < data.xPolynomials.size(); k++) //alle stÃ¼tzpunkte durchgehen
+        for(int k = 0; k < data.xPolynomials.size(); k++) //alle stützpunkte durchgehen
         {
             Polynomial polynomial = data.xPolynomials.get(k);
             Double x = polynomial.getRoomCoordinate();
