@@ -12,6 +12,7 @@
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
+\definecolor{lightgray}{rgb}{0.95,0.95,0.95}
 
 \lstset{frame=tb,
 	language=Java,
@@ -25,6 +26,7 @@
 	keywordstyle=\color{blue},
 	commentstyle=\color{dkgreen},
 	stringstyle=\color{mauve},
+	backgroundcolor=\color{lightgray},
 	breaklines=true,
 	breakatwhitespace=true,
 	tabsize=3
@@ -61,6 +63,16 @@
 \newpage
 \tableofcontents
 \newpage
+\section{Input}
+Zum Einlesen der Punkte aus einer Textdatei, werden die x-, y- und z-Werte der Punkte zeilenweise in der Datei gespeichert und jeweils mit einem Leerzeichen getrennt. 
+\begin{lstlisting}[caption={Input-Datei}, label={lst:label}, language=Java]
+x_1 y_1 z_1
+x_2 y_2 z_2
+...
+\end{lstlisting}
+
+Die Punkte k\"onnen dabei unsortiert an das Programm \"ubergeben werden. 
+
 \section{Testdaten - Erzeugung}
 
 Um Testdaten zu erzeugen haben wir uns eine konkrete Funktion gesucht. Diese wird in der Klasse \glqq{GenerateTest}\grqq benutzt.
@@ -99,5 +111,14 @@ private void approximateXPolynomials(PointMatrix points) //wenn noch keine Stüt
 
 \section{Benutzeroberfl\"ache}
 
+Die Benutzeroberfl\"ache wurde mit Hilfe des Tools \glqq{JMathPlot}\grqq erstellt, die dem Benutzer nach dem Einlesen der Eingabedatei direkt den dazugeh\"origen Plot anzeigt. \\ 
+Es k\"onnen die Pfade zu der Eingabe- bzw. Ausgabedatei und die Genauigkeit eingeben werden. Die Genauigkeit bestimmt, wie viele Extrapunkte zwischen den eingegeben berechnet werden. \\
+Diese Eingaben werden an den \glqq{Controller}\grqq weitergegeben, der ggf. weitere Punkte und anschlie{\ss}end die Fl\"ache berechnen l\"asst. Am Ende wird dem Benutzer auf der GUI der Oberfl\"acheninhalt angezeigt. 
 
+\section{Beispiel}
+
+\section{Quellen}
+\begin{itemize}
+\item JMathPlot - https://github.com/yannrichet/jmathplot
+\end{itemize}
 \end{document}
