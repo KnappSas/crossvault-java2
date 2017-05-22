@@ -12,7 +12,6 @@
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
-\definecolor{lightgray}{rgb}{0.95,0.95,0.95}
 
 \lstset{frame=tb,
 	language=Java,
@@ -26,7 +25,6 @@
 	keywordstyle=\color{blue},
 	commentstyle=\color{dkgreen},
 	stringstyle=\color{mauve},
-	backgroundcolor=\color{lightgray},
 	breaklines=true,
 	breakatwhitespace=true,
 	tabsize=3
@@ -50,9 +48,7 @@
 		\large
 		\begin{tabular}{@{}l l}
 			Eingereicht von: & \\
-			Dieter Dirk J\"uptner \\
 			Sascha Knapp \\
-			Kai Liu \\
 			Paul S\"oldner \\
 			\\
 			Datum: \today \\
@@ -72,10 +68,9 @@ x_2 y_2 z_2
 \end{lstlisting}
 
 Die Punkte k\"onnen dabei unsortiert an das Programm \"ubergeben werden. 
-
 \section{Testdaten - Erzeugung}
 
-Um Testdaten zu erzeugen haben wir uns eine konkrete Funktion gesucht. Diese wird in der Klasse \glqq{GenerateTest}\grqq benutzt.
+Um Testdaten zu erzeugen haben wir uns eine konkrete Funktion gesucht. Diese wird in der Klasse \glqq{GenerateTest}\grqq benutzt. 
 
 \begin{lstlisting}[caption={Funktion zur Testdaten-Erzeugung}, label={lst:label}, language=Java]
 public static double f1(double x, double y) {
@@ -88,7 +83,8 @@ Die Funktion wird in einem Bereich x und y betrachtet. Diese Bereiche werden jew
 Die gef\"ullten Felder werden an die \glqq{Output}\grqq - Klasse gegeben, die Punkte getrennt von Abs\"atzen in ein Textdokument schreibt.
 
 \section{Approximation - Regressionspolynome}
-Die Klasse \glqq{PolynomialPool}\grqq stellt Methoden zum Berechnen der ersten Polynome anhand der gemessenen Punkte zur Verf\"ugung. Dabei werden alle in einer Reihe liegenden Punkte in eine ArrayList gegeben und an die von mir geschriebene Klasse \glqq{Regression}\grqq-Klasse gegeben. Hier wird auch angegeben, welchen Grad die Polynome haben sollen. Wir haben eine Konstante mit dem Wert von 2 Grad gew\"ahlt.
+Die Klasse \glqq{PolynomialPool}{\grqq } stellt Methoden zum Berechnen der ersten Polynome anhand der gemessenen Punkte zur Verf\"ugung. Dabei werden alle in einer Reihe liegenden Punkte in eine ArrayList gegeben und an die Klasse \glqq{Regression}\grqq  gegeben. Hier wird auch angegeben, welchen Grad die Polynome haben sollen. Wir haben eine Konstante mit dem Wert von 2 Grad gew\"ahlt.
+
 
 \begin{lstlisting}[caption={Polynome mit x als Raumkoordinate}, label={lst:label}, language=Java]
 private void approximateXPolynomials(PointMatrix points) //wenn noch keine Stützpunkte vorhanden sind
@@ -104,16 +100,44 @@ private void approximateXPolynomials(PointMatrix points) //wenn noch keine Stüt
 }
 \end{lstlisting}
 
-
-\subsection{Schnittstellen}
-
 \section{Berechnung der Oberfl\"ache}
+\begin{lstlisting}[caption={}, label={lst:label}, language=Java]
+    public double calcSurfaceArea(ArrayList<Polynomial> funcX, ArrayList<Polynomial> funcY)
+    {
+        Double result = 0.0;
+        for(int i = 0; i < funcX.size()-1; i++)
+        {
+            for(int j = 0; j < funcY.size()-1; j++)
+            {
+                Polynomial currFuncX = funcX.get(i);
+                Polynomial nextFuncX = funcX.get(i+1);
+                Polynomial currFuncY = funcY.get(j);
+                Polynomial nextFuncY = funcY.get(j+1);
+                Point3D px1 = new Point3D(currFuncX.getRoomCoordinate(), currFuncY.getRoomCoordinate(), currFuncX.derivation(currFuncY.getRoomCoordinate()));
+                Point3D py1 = new Point3D(currFuncX.getRoomCoordinate(), currFuncY.getRoomCoordinate(), currFuncY.derivation(currFuncX.getRoomCoordinate()));
+                Point3D px2 = new Point3D(nextFuncX.getRoomCoordinate(), currFuncY.getRoomCoordinate(), nextFuncX.derivation(currFuncY.getRoomCoordinate()));
+                Point3D py2 = new Point3D(currFuncX.getRoomCoordinate(), nextFuncY.getRoomCoordinate(), nextFuncY.derivation(currFuncX.getRoomCoordinate()));
 
+                Double xDelta = px2.getX()-px1.getX();
+                Double yDelta = py2.getY()-py1.getY();
+
+                Vector rx = new Vector(px2.getX()-px1.getX(), px2.getY()-px1.getY(), px2.getZ()-px1.getZ());
+                Vector ry = new Vector(py2.getX()-py1.getX(), py2.getY()-py1.getY(), py2.getZ()-py1.getZ());
+
+                Vector crossProduct = new Vector(rx.y() * ry.z()-rx.z()*ry.y(),rx.z()*ry.x()-rx.x()*ry.z(), rx.x()*ry.y()-rx.y()*ry.x());
+                Double sum = crossProduct.sum()*xDelta*yDelta;
+                result += sum;
+            }
+        }
+        System.out.println("Oberfläche: " + result + " FE");
+        return result;
+    }
+\end{lstlisting}
 \section{Benutzeroberfl\"ache}
 
-Die Benutzeroberfl\"ache wurde mit Hilfe des Tools \glqq{JMathPlot}\grqq erstellt, die dem Benutzer nach dem Einlesen der Eingabedatei direkt den dazugeh\"origen Plot anzeigt. \\ 
+Die Benutzeroberfl\"ache wurde mit Hilfe des Tools \glqq{JMathPlot}{\grqq } erstellt, die dem Benutzer nach dem Einlesen der Eingabedatei direkt den dazugeh\"origen Plot anzeigt. \\ 
 Es k\"onnen die Pfade zu der Eingabe- bzw. Ausgabedatei und die Genauigkeit eingeben werden. Die Genauigkeit bestimmt, wie viele Extrapunkte zwischen den eingegeben berechnet werden. \\
-Diese Eingaben werden an den \glqq{Controller}\grqq weitergegeben, der ggf. weitere Punkte und anschlie{\ss}end die Fl\"ache berechnen l\"asst. Am Ende wird dem Benutzer auf der GUI der Oberfl\"acheninhalt angezeigt. 
+Diese Eingaben werden an den \glqq{Controller}{\grqq } weitergegeben, der ggf. weitere Punkte und anschlie{\ss}end die Fl\"ache berechnen l\"asst. Am Ende wird dem Benutzer auf der GUI der Oberfl\"acheninhalt angezeigt. 
 
 \section{Beispiel}
 
@@ -121,4 +145,12 @@ Diese Eingaben werden an den \glqq{Controller}\grqq weitergegeben, der ggf. weit
 \begin{itemize}
 \item JMathPlot - https://github.com/yannrichet/jmathplot
 \end{itemize}
+
+\section{Ausblick}
+\subsection{Echte Punkte}
+Derzeit ist das Programm nur mit \glqq{perfekten}{\grqq } Punkten lauff\"ahig. Es fehlt eine funktionierende Routine, die Punkte, die nicht in einer Reihe liegen, so zurecht zu r\"uckt, dass auch Regressionspolynome generiert werden k\"onnen.
+\subsection{Fehlerbehebung bei Verfeinerung}
+Die M\"oglichkeit der Verfeinerung weist auch noch Schw\"achen auf. So treten nach einer Verfeinerung Fehler bei der grafischen Darstellung auf und bei der Berechnung der Oberfll\"ache.
+\subsection{Verbesserung der Oberfl\"achenberechnung}
+Die Oberfl\"ache wird derzeit durch eine sehr einfache N\"aherung berechnet, die f\"ur ein genaues Ergebnis sehr lange f\"ur die Berechnung ben\"otigt. Die Kr\"ummung der Fl\"ache wird dabei nicht betrachtet. Es k\"onnten allerdings genauere Ergebnisse in viel k\"urzerer Zeit ermittelt werden, wenn diese auch untersucht w\"urde. 
 \end{document}
