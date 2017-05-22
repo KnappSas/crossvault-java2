@@ -132,7 +132,7 @@ public class Controller
 
         try
         {
-            src = Input.unOrderedReadFromFile("/home/killer/Documents/git-repos/crossvault-java2/Regression/test/crossvault_points.txt");
+            src = Input.unOrderedReadFromFile(file.getAbsolutePath().replace("\\", "/"));
         }
         catch (IOException e)
         {
