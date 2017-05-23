@@ -150,9 +150,9 @@ public class Controller
         pointMatrix.setPointList(points);
         data.pm = pointMatrix;
 
-        removeAnomaly(data.pm);
+        //removeAnomaly(data.pm);
 
-        PolynomialPool pool = new PolynomialPool(data);
+        PolynomialPool pool = new PolynomialPool(data, genauigkeit);
         pool.approximate(points);
         Integral i = new Integral();
         Double flaeche = i.calcSurfaceArea(data.xPolynomials, data.yPolynomials);
