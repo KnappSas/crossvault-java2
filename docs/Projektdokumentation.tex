@@ -2,21 +2,16 @@
 \usepackage[ngerman]{babel}
 \usepackage{placeins}
 \usepackage{mathtools}
-%%
-\usepackage{float}
-\usepackage{struktex}
-\usepackage{listings}
-\usepackage{titlesec}
-
-%%
 \title{Dokumentation - Projekt Kreuzgew\"olbe}
-\author{Java-Gruppe 2 (Sascha Knapp, Paul S\"oldner)}
+\author{Java-Gruppe 2 (Dieter Dirk J\"uptner, Sascha Knapp, Kai Liu, Paul S\"oldner)}
 
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{\baselineskip}
-
+\usepackage{graphicx}
 \usepackage{listings}
 \usepackage{color}
+\usepackage{amsmath}
+\usepackage{bm}
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
@@ -67,6 +62,8 @@
 \newpage
 \tableofcontents
 \newpage
+\section{Klassendiagramm}
+\includegraphics[width=1.2\textwidth]{C:/Users/user/Desktop/uml.png}
 \section{Input}
 Zum Einlesen der Punkte aus einer Textdatei, werden die x-, y- und z-Werte der Punkte zeilenweise in der Datei gespeichert und jeweils mit einem Leerzeichen getrennt. Die Punkte k\"onnen dabei unsortiert an das Programm \"ubergeben werden. 
 \begin{lstlisting}[caption={Input-Datei}, label={lst:label}, language=Java] 
@@ -108,7 +105,6 @@ public static ArrayList<ArrayList<Point3D>> orderedReadFromFile(String file) thr
 		return ergebnis;
 	}
 \end{lstlisting}
-
 \section{Testdaten - Erzeugung}
 
 Um Testdaten zu erzeugen haben wir uns eine konkrete Funktion gesucht. Diese wird in der Klasse \glqq{GenerateTest}\grqq benutzt. 
@@ -142,6 +138,8 @@ private void approximateXPolynomials(PointMatrix points) //wenn noch keine Stüt
 \end{lstlisting}
 
 \section{Berechnung der Oberfl\"ache}
+Ein einzelnes Fl\"achenst\"uck ergibt sich aus $|\overrightarrow{\boldsymbol{r_u}} \times \overrightarrow{\boldsymbol{r_v}}| \Delta u \Delta v$ \\
+Die folgende Methode berechnet dies nun f\"ur jedes Polynom und iteriert \"uber die St\"utzpunkte, um die entsprechenden Funktionswerte $z$ f\"ur $x$ und $y$ auszurechnen. Dabei wird in der Methode die Kr\"ummung an den Stellen au{\ss}er Acht gelassen.
 \begin{lstlisting}[caption={}, label={lst:label}, language=Java]
     public double calcSurfaceArea(ArrayList<Polynomial> funcX, ArrayList<Polynomial> funcY)
     {
@@ -176,15 +174,15 @@ private void approximateXPolynomials(PointMatrix points) //wenn noch keine Stüt
 \end{lstlisting}
 \section{Benutzeroberfl\"ache}
 \hspace*{1cm}
-\includegraphics[width=0.8\textwidth]{./Bilder/Oberflaeche_Standard.png}
+\includegraphics[width=0.8\textwidth]{C:/Users/user/Desktop/Oberflaeche_Standard.png}
 \newline
 Die Benutzeroberfl\"ache wurde mit Hilfe des Tools \glqq{JMathPlot}{\grqq } erstellt, die dem Benutzer nach dem Einlesen der Eingabedatei direkt den dazugeh\"origen Plot anzeigt. \\ 
 Es k\"onnen die Pfade zu der Eingabe- bzw. Ausgabedatei und die Genauigkeit eingeben werden. Die Genauigkeit bestimmt, wie viele Extrapunkte zwischen den eingegeben berechnet werden. \\
 Diese Eingaben werden an den \glqq{Controller}{\grqq } weitergegeben, der ggf. weitere Punkte und anschlie{\ss}end die Fl\"ache berechnen l\"asst. Am Ende wird dem Benutzer auf der GUI der Oberfl\"acheninhalt angezeigt. 
 
 \section{Beispiel}
-Werden perfekte Punkte (in x- und y-Richtung auf einer Linie) an das Programm \"ubergeben, wird der Plot korrekt angezeigt und eine n\"aherungsweise korrekte Oberfl\"ache berechnet.
-%% Hier Bild
+Werden perfekte Punkte (in x- und y-Richtung auf einer Linie) an das Programm \"ubergeben, wird der Plot korrekt angezeigt und eine n\"aherungsweise korrekte Oberfl\"ache berechnet. \\
+\includegraphics[width=0.8\textwidth]{C:/Users/user/Desktop/oberflaeche_perfekt.png}
 \section{Quellen}
 \begin{itemize}
 \item JMathPlot - https://github.com/yannrichet/jmathplot
