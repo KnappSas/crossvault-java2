@@ -1,8 +1,16 @@
 \documentclass[11pt, bibliography=totocnumbered]{scrartcl}
 \usepackage[ngerman]{babel}
 \usepackage{placeins}
+\usepackage{mathtools}
+%%
+\usepackage{float}
+\usepackage{struktex}
+\usepackage{listings}
+\usepackage{titlesec}
+
+%%
 \title{Dokumentation - Projekt Kreuzgew\"olbe}
-\author{Java-Gruppe 2 (Dieter Dirk J\"uptner, Sascha Knapp, Kai Liu, Paul S\"oldner)}
+\author{Java-Gruppe 2 (Sascha Knapp, Paul S\"oldner)}
 
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{\baselineskip}
@@ -60,14 +68,47 @@
 \tableofcontents
 \newpage
 \section{Input}
-Zum Einlesen der Punkte aus einer Textdatei, werden die x-, y- und z-Werte der Punkte zeilenweise in der Datei gespeichert und jeweils mit einem Leerzeichen getrennt. 
-\begin{lstlisting}[caption={Input-Datei}, label={lst:label}, language=Java]
+Zum Einlesen der Punkte aus einer Textdatei, werden die x-, y- und z-Werte der Punkte zeilenweise in der Datei gespeichert und jeweils mit einem Leerzeichen getrennt. Die Punkte k\"onnen dabei unsortiert an das Programm \"ubergeben werden. 
+\begin{lstlisting}[caption={Input-Datei}, label={lst:label}, language=Java] 
 x_1 y_1 z_1
 x_2 y_2 z_2
 ...
 \end{lstlisting}
+Die Datei wird mit Hilfe eines FileReaders und BufferedReaders eingelesen. Die einzelnen Zeilen werden an Leerzeichen und Tabulatoren getrennt und als Punkt-Objekte einer ArrayList hinzugef\"ugt.
+\begin{lstlisting}[caption={Input-Quellcode}, label={lst:label}, language=Java]
+public static ArrayList<ArrayList<Point3D>> orderedReadFromFile(String file) throws IOException {
+		FileReader fr = new FileReader(file);
+		BufferedReader br = new BufferedReader(fr);
 
-Die Punkte k\"onnen dabei unsortiert an das Programm \"ubergeben werden. 
+		String zeile = "";
+		int zeilennummer = 0;
+		ArrayList<ArrayList<Point3D>> ergebnis = new ArrayList<ArrayList<Point3D>>();
+		ArrayList<Point3D> liste;
+		Point3D p;
+		while ((zeile = br.readLine()) != null) {
+			if (zeile.isEmpty())
+				continue;
+			String[] split = zeile.split("\\s+");
+			liste = new ArrayList<Point3D>();
+			for (int i = 0; i < split.length; i += 3) {
+
+				p = new Point3D(Double.parseDouble(split[i]), Double.parseDouble(split[i + 1]),
+						Double.parseDouble(split[i + 2]));
+				// p.getPunkt();
+				liste.add(p);
+			}
+			ergebnis.add(zeilennummer, liste);
+			zeilennummer++;
+		}
+
+		br.close();
+
+		System.out.println("File '" + file + "' wurde erfolgreich eingelesen.");
+
+		return ergebnis;
+	}
+\end{lstlisting}
+
 \section{Testdaten - Erzeugung}
 
 Um Testdaten zu erzeugen haben wir uns eine konkrete Funktion gesucht. Diese wird in der Klasse \glqq{GenerateTest}\grqq benutzt. 
@@ -134,7 +175,9 @@ private void approximateXPolynomials(PointMatrix points) //wenn noch keine Stüt
     }
 \end{lstlisting}
 \section{Benutzeroberfl\"ache}
-
+\hspace*{1cm}
+\includegraphics[width=0.8\textwidth]{./Bilder/Oberflaeche_Standard.png}
+\newline
 Die Benutzeroberfl\"ache wurde mit Hilfe des Tools \glqq{JMathPlot}{\grqq } erstellt, die dem Benutzer nach dem Einlesen der Eingabedatei direkt den dazugeh\"origen Plot anzeigt. \\ 
 Es k\"onnen die Pfade zu der Eingabe- bzw. Ausgabedatei und die Genauigkeit eingeben werden. Die Genauigkeit bestimmt, wie viele Extrapunkte zwischen den eingegeben berechnet werden. \\
 Diese Eingaben werden an den \glqq{Controller}{\grqq } weitergegeben, der ggf. weitere Punkte und anschlie{\ss}end die Fl\"ache berechnen l\"asst. Am Ende wird dem Benutzer auf der GUI der Oberfl\"acheninhalt angezeigt. 
